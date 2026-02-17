@@ -1,134 +1,105 @@
-# Quote Genie: Predictive Pricing Intelligence Engine (PPIE)
+# Quote Genie 🔮
 
-**Quote Genie** eliminates manual, inconsistent quoting by leveraging supervised machine learning to forecast optimal prices in real-time. It balances win probability with target margins, transforming pricing into an adaptive, AI-driven process.
+> **Predictive Pricing Intelligence Engine (PPIE)**  
+> *Data-Driven Decisions. Optimized Margins. Winning Quotes.*
 
-## 🚀 Key Features
-- **Dual-Model Strategy**: 
-    - **Win Probability Model** (XGBoost Classifier) predicts acceptance likelihood.
-    - **Price Optimization Model** (XGBRegressor) forecasts market rates.
-- **Real-Time Quoting**: Instant price recommendations via FastAPI backend.
-- **Rich Aesthetics**: Modern, glassmorphism-based UI for sales reps.
-- **Explainability**: Insights into key factors driving the price (Weight, Market Conditions).
+---
 
-## 🛠️ Architecture
-- **Frontend**: React + Vite (Glassmorphism Design)
-- **Backend**: FastAPI (Python)
-- **ML Engine**: Scikit-Learn, XGBoost, Pandas
-- **Data**: Synthetic Data Generator included for demonstration.
+**Quote Genie** transforms the manual quoting process into an intelligent, data-driven workflow. By leveraging advanced machine learning, it predicts optimal price points in real-time to balance **win probability** with **profit margins**. 
 
-## 🏁 Getting Started
+---
 
-### 1. Backend Setup
-The backend handles the ML inference and API requests.
+## 📸 System Overview
 
-```bash
-cd backend
-# Install dependencies
-pip install -r requirements.txt
-pip install scikit-learn xgboost pandas numpy joblib fastapi uvicorn python-multipart
+The engine operates on a sophisticated **Dual-Model Architecture**:
 
-# Start the API server
-uvicorn main:app --reload
-```
-The API will be available at `http://localhost:8000`.
+1.  **Price Optimization** (XGBRegressor): "What is the fair market rate?"
+2.  **Win Probability** (XGBClassifier): "What is the chance of winning at this price?"
 
-### 2. Machine Learning Engine
-To train the models from scratch (using synthetic data):
-
-```bash
-cd ml_engine
-# Generate synthetic historical data
-python generate_data.py
-
-# Train models (Win Probability & Price Optimization)
-python train_model.py
-```
-This will save trained models to `backend/models/`.
-
-### 3. Frontend Setup
-The frontend provides the sales rep interface.
-
-```bash
-cd frontend
-# Install dependencies
-npm install
-
-# Start the development server
-npm run dev
-```
-Open your browser at the URL shown (usually `http://localhost:5173`).
-
-## 📂 Project Structure
-```
-Quote_Genie/
-├── backend/            # FastAPI Application
-│   ├── main.py         # API Endpoints & Inference Logic
-│   ├── models/         # Trained ML Models (pkl files)
-│   └── requirements.txt
-├── frontend/           # React + Vite Application
-│   ├── src/components/ # UI Components (QuoteForm)
-│   └── src/api/        # API Integration
-├── ml_engine/          # Machine Learning Scripts
-│   ├── generate_data.py # Synthetic Data Generator
-│   └── train_model.py   # Model Training Pipeline
-└── docs/               # Documentation
-```
-
-## 📊 How It Works
-
-The Quote Genie engine operates in a four-stage pipeline:
-
-1.  **Input**: Sales rep enters shipment details (Weight, Volume, Route, Customer Segment).
-2.  **Predict**:
-    *   **Price Optimization Model**: Estimates the current market rate for the lane.
-    *   **Win Probability Model**: Predicts the likelihood of the customer accepting a quote at various price points.
-3.  **Optimize**: The system identifies the price point that maximizes expected margin while maintaining a safe win probability threshold.
-4.  **Display**: The frontend presents the "Recommended Price", a confidence interval, and key influencing factors (SHAP values).
-
-### 🔄 End-to-End System Flow
-
+### 🔄 End-to-End Flow
 ```mermaid
 graph TD
-    subgraph "Frontend Layer"
-        A[User Input] -->|Shipment Details| B[Quote Request JSON]
-        F[Display Results]
+    User([Sales Rep]) -->|Input| UI[Frontend Interface]
+    UI -->|JSON| API[FastAPI Backend]
+    
+    subgraph "Intelligence Core"
+        API -->|Features| M1[Market Rate Model]
+        API -->|Features| M2[Win Probability Model]
+        M1 -->|Base Price| Logic[Optimization Engine]
+        M2 -->|Win %| Logic
     end
-
-    subgraph "Backend API Layer"
-        B -->|POST /predict| C[FastAPI Controller]
-        C -->|Data| D[Feature Engineering]
-        E[Response JSON] --> F
-    end
-
-    subgraph "ML Intelligence Layer"
-        D -->|Features| M1[Price Optimization Model]
-        D -->|Features| M2[Win Probability Model]
-        
-        M1 -->|Market Rate Est| O[Optimization Logic]
-        M2 -->|Win Probability| O
-        
-        O -->|Recommended Price + Confidence| E
-    end
+    
+    Logic -->|Optimal Quote| API
+    API -->|Result| UI
 ```
 
-### 🧠 App Workflow
+---
 
-```mermaid
-sequenceDiagram
-    participant User as Sales Rep
-    participant FE as Frontend UI
-    participant API as Backend API
-    participant ML as ML Engine
+## 🚀 Key Features
 
-    User->>FE: Enters Weight, Origin, Destination
-    User->>FE: Clicks "Get Quote"
-    FE->>API: POST /predict (payload)
-    API->>ML: Predict Market Rate (XGB Regressor)
-    ML-->>API: Returns Base Price
-    API->>ML: Predict Win Prob @ Base Price (XGB Classifier)
-    ML-->>API: Returns Probability %
-    API->>API: Apply Business Rules (Min Margin)
-    API-->>FE: Return Optimal Price & Confidence
-    FE-->>User: Visualizes Price, Margin & Win %
+*   **⚡ Real-Time Intelligence**: Get instant price recommendations based on live parameters (Weight, Volume, Route).
+*   **🧠 Dual-Model ML**: Combines regression (price) and classification (win chance) for holistic decision making.
+*   **🎨 Simplicity Design**: A clean, minimalist interface focused on clarity and speed.
+*   **🔍 Explainable AI**: Understand *why* a price was recommended (e.g., "High Demand Route", "Heavy Payload").
+
+---
+
+## 🛠️ Technology Stack
+
+| Component | Tech | Description |
+| :--- | :--- | :--- |
+| **Frontend** | React + Vite | Fast, modern, minimalist UI |
+| **Backend** | FastAPI (Python) | High-performance async API |
+| **ML Core** | XGBoost / Scikit-Learn | Gradient boosting for tabular data |
+| **Data** | Pandas / NumPy | Data processing & synthetic generation |
+
+---
+
+## 🏁 Quick Start
+
+### 1. Backend & ML Setup
+Train the AI models and start the API server.
+```bash
+# 1. Install Dependencies
+pip install scikit-learn xgboost pandas numpy joblib fastapi uvicorn python-multipart
+
+# 2. Train Models (Generate synthetic data first)
+cd ml_engine
+python generate_data.py
+python train_model.py
+
+# 3. Start Backend
+cd ../backend
+uvicorn main:app --reload
+```
+*API runs at: `http://localhost:8000`*
+
+### 2. Frontend Setup
+Launch the user interface.
+```bash
+cd frontend
+npm install
+npm run dev
+```
+*UI runs at: `http://localhost:5173`*
+
+---
+
+## 📂 Repository Structure
+
+```
+Quote_Genie/
+├── 🧠 ml_engine/        # Training pipelines & Data generators
+├── 🔌 backend/          # FastAPI server & Model inference
+├── 💻 frontend/         # React application
+└── 📄 docs/             # Planning & Architecture documents
 ```
 
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to submit pull requests, report issues, and follow our coding standards.
+
+---
+*Built for the Future of Logistics Pricing.*
